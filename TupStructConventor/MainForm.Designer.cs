@@ -1,4 +1,4 @@
-﻿namespace TupHelper
+﻿namespace TarsTupHelper
 {
     partial class MainForm
     {

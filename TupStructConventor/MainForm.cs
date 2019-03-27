@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace TupHelper
+namespace TarsTupHelper
 {
     public partial class MainForm : Form
     {
@@ -22,6 +22,7 @@ namespace TupHelper
             // 默认的 Demo JS 代码
             txtBoxJS.Text =
 @"HUYA.BeginLiveNotice = function() {
+    this.tId = new HUYA.UserId;
     this.lPresenterUid = 0;
     this.iGameId = 0;
     this.sGameName = """";

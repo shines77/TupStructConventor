@@ -5,13 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TupHelper
+namespace TarsTupHelper
 {
-    public interface IClosable
-    {
-        void Close();
-    }
-
     class StringStream : IDisposable, IClosable
     {
         private StringReader reader_ = null;
@@ -21,8 +16,8 @@ namespace TupHelper
         public StringStream(string source)
         {
             reader_ = new StringReader(source);
-            length_ = source.Length;
             position_ = 0;
+            length_ = source.Length;
         }
 
         public void Dispose()
@@ -109,63 +104,11 @@ namespace TupHelper
             return (prefix == words);
         }
 
-        public bool isWhiteSpace(int ch)
-        {
-            return (ch == ' ' || ch == '\t' ||
-                    ch == '\v' || ch == '\f');
-        }
-
-        public bool isNewLine(int ch)
-        {
-            return (ch == '\n' || ch == '\r');
-        }
-
-        public bool isWhiteSpaces(int ch)
-        {
-            return (isWhiteSpace(ch) || isNewLine(ch));
-        }
-
-        public bool isDigital(int ch)
-        {
-            return ((ch >= '0' && ch <= '9'));
-        }
-
-        public bool isLetter(int ch)
-        {
-            return ((ch >= 'a' && ch <= 'z') ||
-                    (ch >= 'A' && ch <= 'Z'));
-        }
-
-        public bool isLowerLetter(int ch)
-        {
-            return ((ch >= 'a' && ch <= 'z'));
-        }
-
-        public bool isUpperLetter(int ch)
-        {
-            return ((ch >= 'A' && ch <= 'Z'));
-        }
-
-        public bool isIdentifierFirst(int ch)
-        {
-            return ((ch >= 'a' && ch <= 'z') ||
-                    (ch >= 'A' && ch <= 'Z') ||
-                    (ch == '_'));
-        }
-
-        public bool isIdentifierBody(int ch)
-        {
-            return ((ch >= 'a' && ch <= 'z') ||
-                    (ch >= 'A' && ch <= 'Z') ||
-                    (ch >= '0' && ch <= '9') ||
-                    (ch == '_'));
-        }
-
         public void skipWhiteSpace()
         {
             do {
                 int ch = reader_.Peek();
-                if (isWhiteSpace(ch)) {
+                if (Chars.isWhiteSpace(ch)) {
                     reader_.Read();
                     position_++;
                 }
@@ -179,7 +122,7 @@ namespace TupHelper
         {
             do {
                 int ch = reader_.Peek();
-                if (isNewLine(ch)) {
+                if (Chars.isNewLine(ch)) {
                     reader_.Read();
                     position_++;
                 }
@@ -193,7 +136,7 @@ namespace TupHelper
         {
             do {
                 int ch = reader_.Peek();
-                if (isWhiteSpaces(ch)) {
+                if (Chars.isWhiteSpaces(ch)) {
                     reader_.Read();
                     position_++;
                 }
@@ -207,14 +150,14 @@ namespace TupHelper
         {
             StringBuilder identifier = new StringBuilder();
             int ch = reader_.Peek();
-            if (isIdentifierFirst(ch)) {
+            if (Chars.isIdentifierFirst(ch)) {
                 identifier.Append((char)ch);
                 reader_.Read();
                 position_++;
 
                 do {
                     ch = reader_.Peek();
-                    if (isIdentifierBody(ch)) {
+                    if (Chars.isIdentifierBody(ch)) {
                         identifier.Append((char)ch);
                         reader_.Read();
                         position_++;

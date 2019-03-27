@@ -7,7 +7,7 @@
     <ProjectGuid>{F3C41312-FD99-46F6-B256-C15A963F9D63}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TupHelper</RootNamespace>
+    <RootNamespace>TarsTupHelper</RootNamespace>
     <AssemblyName>TupStructConventor</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -54,7 +54,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringParser.cs" />
     <Compile Include="StringStream.cs" />
+    <Compile Include="Chars.cs" />
     <Compile Include="TupStructConventor.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
