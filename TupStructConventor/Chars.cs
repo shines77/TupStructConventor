@@ -83,8 +83,18 @@ namespace TarsTupHelper
                 isValid = true;
             }
             else {
-                bvalue = false;
-                isValid = false;
+                if (value == "0") {
+                    bvalue = false;
+                    isValid = true;
+                }
+                else if (value == "1") {
+                    bvalue = true;
+                    isValid = true;
+                }
+                else {
+                    bvalue = false;
+                    isValid = false;
+                }
             }
             return isValid;
         }

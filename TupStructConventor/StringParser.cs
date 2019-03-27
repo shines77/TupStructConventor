@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace TarsTupHelper
 {
+#pragma warning disable 0169
+#pragma warning disable 0414
+
     public class StringParser : IDisposable
     {
         private string source_ = null;
@@ -25,4 +28,8 @@ namespace TarsTupHelper
             //
         }
     }
+
+#pragma warning restore 0414
+#pragma warning restore 0169
+
 }

@@ -77,7 +77,10 @@ namespace TarsTupHelper
 
             string csharpCode = conventor.ConventToCSharp();
             txtBoxCSharp.Text = csharpCode;
-            txtBoxDiagnostics.Text = conventor.Diagnostics();
+            if (conventor.Diagnostics() == "")
+                txtBoxDiagnostics.Text = "Parse success.";
+            else
+                txtBoxDiagnostics.Text = conventor.Diagnostics();
             btnConvent.Enabled = true;
         }
     }

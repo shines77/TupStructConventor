@@ -112,7 +112,6 @@ namespace TarsTupHelper
 
         public TupStructConventor()
         {
-            codeTemplate = "";
         }
 
         public string JsCode()
@@ -288,10 +287,12 @@ namespace TarsTupHelper
         {
             bool correct = false;
             switch (vt) {
-                case VarType.Bool:
-                    {
+                case VarType.Bool: {
                         bool bvalue = false;
                         correct = Chars.parseBoolean(fieldValue, ref bvalue);
+                        if (correct) {
+                            value = bvalue ? "true" : "false";
+                        }
                         break;
                     }
 
@@ -337,8 +338,10 @@ namespace TarsTupHelper
                 case 'b':
                     type = VarType.Bool;
                     correct = verifyFieldType(VarType.Bool, fieldValue, ref varType);
-                    if (correct)
+                    if (correct) {
                         fieldType = "bool";
+                        fieldValue = varType;
+                    }
                     break;
 
                 case 'c':
@@ -422,7 +425,7 @@ namespace TarsTupHelper
             StringStream stream = new StringStream(jsCode);
 
             do {
-                string funcName;
+                string structName;
                 VarType type;
                 string fieldType;
                 string fieldName;
@@ -433,17 +436,17 @@ namespace TarsTupHelper
 
                 stream.skipWhiteSpaces();
 
-                funcName = stream.parseIdentifier();
+                structName = stream.parseIdentifier();
                 stream.skipWhiteSpaces();
 
-                if (funcName == HUYA_Prefix) {
-                    info += "It's a HUYA Live class.\r\n";
+                if (structName == HUYA_Prefix) {
+                    //info += "It's a HUYA Live class.\r\n";
                 }
 
                 while (stream.get() == '.') {
                     // Skip the '.' char inside struct name .
                     stream.skip();
-                    funcName = stream.parseIdentifier();
+                    structName = stream.parseIdentifier();
                     stream.skipWhiteSpaces();
                 }
 
@@ -556,12 +559,83 @@ namespace TarsTupHelper
 
                 } while (true);
 
-                csharpCode = string.Format("struct {0}\r\n{{\r\n", funcName);
+                string declaration = "";
+                int index = 0;
                 foreach (var field in fieldList) {
-                    csharpCode += string.Format("    public {0} {1} = {2};\r\n",
-                                                field.Type, field.Name, field.Value);
+                    if (index == 0) {
+                        declaration += string.Format("public {0} {1} = {2};",
+                                                     field.Type, field.Name, field.Value);
+                    }
+                    else {
+                        declaration += string.Format("        public {0} {1} = {2};",
+                                                     field.Type, field.Name, field.Value);
+                    }
+                    if (index < fieldList.Count - 1) {
+                        declaration += "\r\n";
+                    }
+                    index++;
                 }
-                csharpCode += string.Format("}};");
+
+                string readFrom = "";
+                index = 0;
+                foreach (var field in fieldList) {
+                    if (index == 0) {
+                        readFrom += string.Format("{0} = ({1})_is.Read({2}, {3}, false);",
+                                                  field.Name, field.Type, field.Name, index);
+                    }
+                    else {
+                        readFrom += string.Format("            {0} = ({1})_is.Read({2}, {3}, false);",
+                                                  field.Name, field.Type, field.Name, index);
+                    }
+                    if (index < fieldList.Count - 1) {
+                        readFrom += "\r\n";
+                    }
+                    index++;
+                }
+
+                string writeTo = "";
+                index = 0;
+                foreach (var field in fieldList) {
+                    if (index == 0) {
+                        writeTo += string.Format("_os.Write({0}, {1});",
+                                                 field.Name, index);
+                    }
+                    else {
+                        writeTo += string.Format("            _os.Write({0}, {1});",
+                                                 field.Name, index);
+                    }
+                    if (index < fieldList.Count - 1) {
+                        writeTo += "\r\n";
+                    }
+                    index++;
+                }
+
+                string display = "";
+                index = 0;
+                foreach (var field in fieldList) {
+                    if (index == 0) {
+                        display += string.Format("_ds.Display({0}, \"{1}\");",
+                                                 field.Name, field.Name);
+                    }
+                    else {
+                        display += string.Format("            _ds.Display({0}, \"{1}\");",
+                                                 field.Name, field.Name);
+                    }
+                    if (index < fieldList.Count - 1) {
+                        display += "\r\n";
+                    }
+                    index++;
+                }
+
+                string outputCode = TupStructConventor.codeTemplate;
+
+                outputCode = outputCode.Replace("[$$ClassName$$]", structName);
+                outputCode = outputCode.Replace("[$$Declaration$$]", declaration);
+                outputCode = outputCode.Replace("[$$ReadFrom$$]", readFrom);
+                outputCode = outputCode.Replace("[$$WriteTo$$]", writeTo);
+                outputCode = outputCode.Replace("[$$Display$$]", display);
+
+                csharpCode = outputCode;
             } while (false);
 
             infos = info;
