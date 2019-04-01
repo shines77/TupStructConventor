@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace TarsTupHelper
 {
-    class StringStream : IDisposable, IClosable
+    class StringScanner : IDisposable, IClosable
     {
         private StringReader reader_ = null;
         private int position_ = 0;
         private int length_ = 0;
 
-        public StringStream(string source)
+        public StringScanner(string source)
         {
             reader_ = new StringReader(source);
             position_ = 0;

@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 namespace TarsTupHelper
 {
-    public interface IClosable
-    {
-        void Close();
-    }
-
     public class Chars
     {
         public static bool isNull(int ch)
@@ -74,27 +69,36 @@ namespace TarsTupHelper
         {
             bool isValid = false;
             value = value.ToLower();
-            if (value.StartsWith("true")) {
+            if (value == "true" || value == "!0") {
                 bvalue = true;
                 isValid = true;
             }
-            else if (value.StartsWith("false")) {
+            else if (value == "false" || value == "!1") {
                 bvalue = false;
                 isValid = true;
             }
             else {
-                if (value == "0") {
-                    bvalue = false;
-                    isValid = true;
-                }
-                else if (value == "1") {
-                    bvalue = true;
-                    isValid = true;
-                }
-                else {
-                    bvalue = false;
-                    isValid = false;
-                }
+                bvalue = false;
+                isValid = false;
+            }
+            return isValid;
+        }
+
+        public static bool parseBooleanInt(string value, ref bool bvalue)
+        {
+            bool isValid = false;
+            value = value.ToLower();
+            if (value == "0") {
+                bvalue = false;
+                isValid = true;
+            }
+            else if (value == "1") {
+                bvalue = true;
+                isValid = true;
+            }
+            else {
+                bvalue = false;
+                isValid = false;
             }
             return isValid;
         }

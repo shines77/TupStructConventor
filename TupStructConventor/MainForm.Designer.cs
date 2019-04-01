@@ -42,7 +42,7 @@
             this.txtBoxJS.Multiline = true;
             this.txtBoxJS.Name = "txtBoxJS";
             this.txtBoxJS.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtBoxJS.Size = new System.Drawing.Size(498, 510);
+            this.txtBoxJS.Size = new System.Drawing.Size(498, 523);
             this.txtBoxJS.TabIndex = 0;
             this.txtBoxJS.WordWrap = false;
             // 
@@ -52,16 +52,18 @@
             this.txtBoxCSharp.Location = new System.Drawing.Point(535, 37);
             this.txtBoxCSharp.Multiline = true;
             this.txtBoxCSharp.Name = "txtBoxCSharp";
+            this.txtBoxCSharp.ReadOnly = true;
             this.txtBoxCSharp.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtBoxCSharp.Size = new System.Drawing.Size(488, 510);
+            this.txtBoxCSharp.Size = new System.Drawing.Size(488, 523);
             this.txtBoxCSharp.TabIndex = 1;
             this.txtBoxCSharp.WordWrap = false;
             // 
             // txtBoxDiagnostics
             // 
-            this.txtBoxDiagnostics.Location = new System.Drawing.Point(21, 564);
+            this.txtBoxDiagnostics.Location = new System.Drawing.Point(21, 578);
             this.txtBoxDiagnostics.Multiline = true;
             this.txtBoxDiagnostics.Name = "txtBoxDiagnostics";
+            this.txtBoxDiagnostics.ReadOnly = true;
             this.txtBoxDiagnostics.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtBoxDiagnostics.Size = new System.Drawing.Size(1002, 106);
             this.txtBoxDiagnostics.TabIndex = 2;
@@ -69,7 +71,7 @@
             // 
             // btnConvent
             // 
-            this.btnConvent.Location = new System.Drawing.Point(408, 680);
+            this.btnConvent.Location = new System.Drawing.Point(430, 697);
             this.btnConvent.Name = "btnConvent";
             this.btnConvent.Size = new System.Drawing.Size(195, 29);
             this.btnConvent.TabIndex = 3;
@@ -99,7 +101,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1045, 719);
+            this.ClientSize = new System.Drawing.Size(1042, 738);
             this.Controls.Add(this.lblCSharp);
             this.Controls.Add(this.lblJavaScript);
             this.Controls.Add(this.btnConvent);
@@ -111,7 +113,7 @@
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Tup Struct Conventor：JS --> C#";
+            this.Text = "TarsTup Struct Conventor：JS --> C#";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -290,6 +290,9 @@ namespace TarsTupHelper
                 case VarType.Bool: {
                         bool bvalue = false;
                         correct = Chars.parseBoolean(fieldValue, ref bvalue);
+                        if (!correct) {
+                            correct = Chars.parseBooleanInt(fieldValue, ref bvalue);
+                        }
                         if (correct) {
                             value = bvalue ? "true" : "false";
                         }
@@ -420,9 +423,8 @@ namespace TarsTupHelper
         {
             string csharpCode = "";
             string info = "";
-            const string HUYA_Prefix = "HUYA";
 
-            StringStream stream = new StringStream(jsCode);
+            StringScanner scanner = new StringScanner(jsCode);
 
             do {
                 string structName;
@@ -434,121 +436,112 @@ namespace TarsTupHelper
 
                 List<MemberVariable> fieldList = new List<MemberVariable>();
 
-                stream.skipWhiteSpaces();
+                scanner.skipWhiteSpaces();
 
-                structName = stream.parseIdentifier();
-                stream.skipWhiteSpaces();
+                structName = scanner.parseIdentifier();
+                scanner.skipWhiteSpaces();
 
-                if (structName == HUYA_Prefix) {
-                    //info += "It's a HUYA Live class.\r\n";
-                }
-
-                while (stream.get() == '.') {
+                while (scanner.get() == '.') {
                     // Skip the '.' char inside struct name .
-                    stream.skip();
-                    structName = stream.parseIdentifier();
-                    stream.skipWhiteSpaces();
+                    scanner.skip();
+                    structName = scanner.parseIdentifier();
+                    scanner.skipWhiteSpaces();
                 }
 
-                if (stream.get() != '=') {
-                    info += GenerateWarning("Expect to '='", stream.get(), stream.Position);
+                if (scanner.get() != '=') {
+                    info += GenerateWarning("Expect to '='", scanner.get(), scanner.Position);
                     break;
                 }
-                stream.skip();
+                scanner.skip();
 
-                stream.skipWhiteSpaces();
+                scanner.skipWhiteSpaces();
 
-                identName = stream.parseIdentifier();
+                identName = scanner.parseIdentifier();
                 if (identName != "function") {
-                    info += GenerateWarning("Expect to 'function'", identName, stream.Position);
+                    info += GenerateWarning("Expect to 'function'", identName, scanner.Position);
                     break;
                 }
-                stream.skipWhiteSpaces();
+                scanner.skipWhiteSpaces();
 
-                if (stream.get() != '(') {
-                    info += GenerateWarning("Expect to '('", stream.get(), stream.Position);
+                if (scanner.get() != '(') {
+                    info += GenerateWarning("Expect to '('", scanner.get(), scanner.Position);
                     break;
                 }
-                stream.skip();
+                scanner.skip();
 
-                if (stream.get() != ')') {
-                    info += GenerateWarning("Expect to ')'", stream.get(), stream.Position);
+                if (scanner.get() != ')') {
+                    info += GenerateWarning("Expect to ')'", scanner.get(), scanner.Position);
                     break;
                 }
-                stream.skip();
+                scanner.skip();
 
-                stream.skipWhiteSpaces();
+                scanner.skipWhiteSpaces();
 
-                if (stream.get() != '{') {
-                    info += GenerateWarning("Expect to '{'", stream.get(), stream.Position);
+                if (scanner.get() != '{') {
+                    info += GenerateWarning("Expect to '{'", scanner.get(), scanner.Position);
                     break;
                 }
-                stream.skip();
+                scanner.skip();
 
-                stream.skipWhiteSpaces();
+                scanner.skipWhiteSpaces();
 
-                do {
-                    if (!stream.hasNext()) {
-                        // It's reach the end of code.
-                        break;
-                    }
-
-                    if (stream.get() == '}') {
-                        stream.skip();
-                        if (stream.get() != ';') {
-                            info += GenerateWarning("Expect to ';'", stream.get(), stream.Position);
+                while (scanner.hasNext()) {
+                    if (scanner.get() == '}') {
+                        scanner.skip();
+                        if (scanner.get() != ';') {
+                            info += GenerateWarning("Expect to ';'", scanner.get(), scanner.Position);
                             break;
                         }
-                        stream.skip();
-                        stream.skipWhiteSpaces();
+                        scanner.skip();
+                        scanner.skipWhiteSpaces();
 
                         // It's the end of code.
                         break;
                     }
 
-                    identName = stream.parseIdentifier();
+                    identName = scanner.parseIdentifier();
                     if (identName != "this") {
-                        info += GenerateWarning("Expect to 'this'", stream.get(), stream.Position);
+                        info += GenerateWarning("Expect to 'this'", scanner.get(), scanner.Position);
                         break;
                     }
 
-                    stream.skipWhiteSpaces();
+                    scanner.skipWhiteSpaces();
 
-                    if (stream.get() != '.') {
-                        info += GenerateWarning("Expect to '.'", stream.get(), stream.Position);
+                    if (scanner.get() != '.') {
+                        info += GenerateWarning("Expect to '.'", scanner.get(), scanner.Position);
                         break;
                     }
-                    stream.skip();
+                    scanner.skip();
 
-                    stream.skipWhiteSpaces();
+                    scanner.skipWhiteSpaces();
 
-                    fieldName = stream.parseIdentifier();
+                    fieldName = scanner.parseIdentifier();
                     if (fieldName.Length <= 0) {
-                        info += GenerateWarning("Expect to [field name]", stream.get(), stream.Position);
+                        info += GenerateWarning("Expect to [field name]", scanner.get(), scanner.Position);
                         break;
                     }
 
-                    stream.skipWhiteSpaces();
+                    scanner.skipWhiteSpaces();
 
-                    if (stream.get() != '=') {
-                        info += GenerateWarning("Expect to '='", stream.get(), stream.Position);
+                    if (scanner.get() != '=') {
+                        info += GenerateWarning("Expect to '='", scanner.get(), scanner.Position);
                         break;
                     }
-                    stream.skip();
+                    scanner.skip();
 
-                    stream.skipWhiteSpaces();
+                    scanner.skipWhiteSpaces();
 
-                    fieldValue = stream.parseToDelimiter(";\r\n}");
+                    fieldValue = scanner.parseToDelimiter(";\r\n}");
                     if (fieldValue.Length <= 0) {
-                        info += GenerateWarning("Expect to [field value]", stream.get(), stream.Position);
+                        info += GenerateWarning("Expect to [field value]", scanner.get(), scanner.Position);
                         break;
                     }
 
-                    if (stream.get() == ';') {
-                        stream.skip();
+                    if (scanner.get() == ';') {
+                        scanner.skip();
                     }
 
-                    stream.skipWhiteSpaces();
+                    scanner.skipWhiteSpaces();
 
                     type = VarType.Unknown;
                     fieldType = "";
@@ -556,8 +549,7 @@ namespace TarsTupHelper
 
                     // Append the fieldName and fieldValue
                     fieldList.Add(new MemberVariable(type, fieldType, fieldName, fieldValue));
-
-                } while (true);
+                }
 
                 string declaration = "";
                 int index = 0;
